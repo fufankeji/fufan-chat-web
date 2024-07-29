@@ -3,6 +3,7 @@ import { useUserStore } from "@/store/modules/user"
 import type * as Conversations from "@/api/conversations/types/conversations"
 import systemPhoto from "@/assets/layouts/icons8-chatgpt-96.png"
 import { EChatType } from "./Enum"
+import QuillEditor from "@/components/RichTextEditor/index.vue"
 
 export interface IChatRecord {
   role: EChatType
@@ -26,22 +27,30 @@ const props = defineProps<Props>()
     <el-avatar :size="24" :src="userStore.photo">{{ userStore.username?.[0] }} </el-avatar>
     <div class="chat-content">
       <el-text type="info" class="time">{{ props.data.create_time }}</el-text>
-      <pre>
+      <!-- <pre>
         {{ props.data.query }}
-      </pre>
+      </pre> -->
+      <QuillEditor :readOnly="true" :value="props.data.query" class="quill-editor-view" />
     </div>
   </div>
   <div :class="{ 'chat-record': true, 'chat-question': false }">
     <el-avatar :size="24" :src="systemPhoto">{{ EChatType.SYSTEM }} </el-avatar>
     <div :class="{ 'chat-content': true, 'chat-error': !props.data.response }">
       <el-text type="info" class="time">{{ props.data.create_time }}</el-text>
-      <!-- {{ props.data[1].content }} -->
-      <pre>
+      <!-- <pre>
         {{
           props.data.response ||
           "An error occurred. If this issue persists please contact us through our help center at fufan.chat.com."
         }}
-      </pre>
+      </pre> -->
+      <QuillEditor
+        :readOnly="true"
+        :value="
+          props.data.response ||
+          'An error occurred. If this issue persists please contact us through our help center at fufan.chat.com.'
+        "
+        class="quill-editor-view"
+      />
     </div>
   </div>
 </template>
@@ -55,7 +64,7 @@ const props = defineProps<Props>()
   .chat-content {
     background-color: var(--el-bg-color);
     border-radius: 4px;
-    padding: 12px 16px;
+    /* padding: 12px 16px; */
     position: relative;
     width: fit-content;
     max-width: 70%;

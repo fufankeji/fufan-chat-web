@@ -106,7 +106,7 @@ defineExpose<IChatRecordsRef>({
     <div class="chat-records" ref="chatRecordsRef">
       <ChatRecord v-for="(record, index) in chatRecords" :key="index" :data="record" />
     </div>
-    <QuillEditor class="quill-editor" :value="inputValue" :send="onSend" />
+    <QuillEditor class="quill-editor" :value="inputValue" :onEnter="onSend" />
   </div>
 </template>
 
@@ -127,6 +127,7 @@ defineExpose<IChatRecordsRef>({
 
   .quill-editor {
     margin-top: auto;
+    max-height: 206px;
   }
 }
 </style>

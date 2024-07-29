@@ -26,7 +26,7 @@ const chatRecords = ref<Conversations.ConversationsConversationsIdMessagesRespon
     conversation_id: "string", // 会话ID
     chat_type: "string", // 会话类型
     query: "string", // 用户输入
-    response: "string", // AI回答
+    response: "[aa](https://baidu.com/)", // AI回答
     meta_data: {},
     feedback_souce: 1,
     feedback_reason: "string",
@@ -118,7 +118,7 @@ defineExpose<IChatRecordsRef>({
     <div class="chat-records" ref="chatRecordsRef">
       <ChatRecord v-for="(record, index) in chatRecords" :key="index" :data="record" />
     </div>
-    <QuillEditor class="quill-editor" :value="inputValue" :send="onSend" />
+    <QuillEditor class="quill-editor" :value="inputValue" :onEnter="onSend" />
   </div>
 </template>
 
@@ -139,6 +139,7 @@ defineExpose<IChatRecordsRef>({
 
   .quill-editor {
     margin-top: auto;
+    max-height: 206px;
   }
 }
 </style>

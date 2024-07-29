@@ -1,11 +1,9 @@
 <template>
-  <div :class="[props.editorWrap]">
-    <div id="editor" class="quill-editor" />
-  </div>
+  <div id="editor" :class="['quill-editor-ref', props.editorWrap]" ref="quillEditorRef" />
 </template>
 
 <script setup lang="ts">
-import { onMounted } from "vue"
+import { onMounted, ref } from "vue"
 import "quill/dist/quill.snow.css"
 
 import Quill from "quill/core"
@@ -20,11 +18,14 @@ import Keyboard from "quill/modules/keyboard"
 
 interface Props {
   value?: string
-  send?(value: string): void
+  onEnter?(value: string): void
   editorWrap?: string
+  readOnly?: boolean
 }
 
 const props = defineProps<Props>()
+const quillEditorRef = ref<HTMLDivElement | null>(null)
+let quillInstance: Quill | null = null
 
 Quill.register({
   "modules/toolbar": Toolbar,
@@ -36,15 +37,13 @@ Quill.register({
   "modules/keyboard": Keyboard
 })
 
-let quillInstance: Quill | null = null
-
 function handler() {
   if (!quillInstance) {
     return
   }
   const inputValue = quillInstance.getText()
   quillInstance.setText("")
-  props.send?.(inputValue)
+  props.onEnter?.(inputValue)
   return false
 }
 
@@ -57,7 +56,8 @@ const bindings = {
 }
 
 onMounted(() => {
-  quillInstance = new Quill("#editor", {
+  if (!quillEditorRef.value) return
+  quillInstance = new Quill(quillEditorRef.value, {
     theme: "snow",
     modules: {
       // syntax: true,
@@ -66,7 +66,8 @@ onMounted(() => {
         bindings
       }
     },
-    placeholder: "请输入..."
+    placeholder: "请输入...",
+    readOnly: props.readOnly
   })
 
   quillInstance.setText(props.value || "")
@@ -74,14 +75,22 @@ onMounted(() => {
 </script>
 
 <style scoped>
-.quill-editor {
-  min-height: 62px;
-  max-height: 206px;
+.quill-editor-ref {
+  /* min-height: 62px;
+  max-height: 206px; */
+  height: fit-content;
   border-radius: var(--el-border-radius-base);
   overflow-y: auto;
   background-color: var(--el-bg-color);
   :deep(.ql-editor.ql-blank::before) {
     color: var(--el-text-color-placeholder);
+  }
+}
+
+.quill-editor-view {
+  border: none;
+  :deep(.ql-editor) {
+    padding: 12px 16px;
   }
 }
 </style>
