@@ -77,7 +77,7 @@ onMounted(() => {
 .quill-editor {
   min-height: 62px;
   max-height: 206px;
-  border-radius: 4px;
+  border-radius: var(--el-border-radius-base);
   overflow-y: auto;
   background-color: var(--el-bg-color);
   :deep(.ql-editor.ql-blank::before) {

@@ -88,3 +88,7 @@ html.dark-blue {
 html.dark-blue .el-button {
   --el-button-disabled-text-color: rgba(255, 255, 255, 0.5);
 }
+
+:root {
+  --el-border-radius-base: 6px;
+}

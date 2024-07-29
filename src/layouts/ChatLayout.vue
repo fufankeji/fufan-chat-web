@@ -1,13 +1,23 @@
 <script setup lang="ts">
-import { ref, onMounted, watch } from "vue"
+import { ref, onMounted, watch, computed } from "vue"
 import { useRoute } from "vue-router"
-import { Expand, Fold, Coin } from "@element-plus/icons-vue"
+import { Expand, Fold } from "@element-plus/icons-vue"
 import RightDrawer from "./components/RightDrawer/index.vue"
 import ChatParams from "./components/RightDrawer/ChatParams.vue"
+import { usePermissionStore } from "@/store/modules/permission"
 
 const activeIndex = ref<string>("")
 const collapse = ref<boolean>(true)
 const route = useRoute()
+const permissionStore = usePermissionStore()
+const routes = computed(() => {
+  const chatRoute = permissionStore.routes.find((item) => {
+    if (!item.meta?.hidden && item.redirect === "/chat") {
+      return true
+    }
+  })
+  return chatRoute?.children || []
+})
 
 onMounted(() => {
   setActiveIndex()
@@ -28,18 +38,12 @@ function setActiveIndex() {
 <template>
   <el-container class="app-chat-container">
     <el-menu :collapse="collapse" :default-active="activeIndex" router class="menu">
-      <el-menu-item index="/chat">
-        <el-icon><ChatLineRound /></el-icon>
-        <template #title>对话</template>
-      </el-menu-item>
-      <!-- <el-menu-item index="/chatparams">
-        <el-icon><SetUp /></el-icon>
-        <template #title>对话参数</template>
-      </el-menu-item> -->
-      <el-menu-item index="/knowledge">
-        <el-icon><Coin /></el-icon>
-        <template #title>知识库</template>
-      </el-menu-item>
+      <el-scrollbar>
+        <el-menu-item v-for="route in routes" :key="route.path" :index="route.path">
+          <el-icon><component :is="(route.props as any)?.icon" /></el-icon>
+          <template #title>{{ route.name }}</template>
+        </el-menu-item>
+      </el-scrollbar>
       <el-divider class="divider" />
       <el-button :icon="collapse ? Expand : Fold" @click="collapse = !collapse" class="expand-btn" plain />
     </el-menu>
