@@ -3,7 +3,8 @@ import { useUserStore } from "@/store/modules/user"
 import type * as Conversations from "@/api/conversations/types/conversations"
 import systemPhoto from "@/assets/layouts/icons8-chatgpt-96.png"
 import { EChatType } from "./Enum"
-import QuillEditor from "@/components/RichTextEditor/index.vue"
+// import QuillEditor from "@/components/RichTextEditor/index.vue"
+import MdPreview from "@/components/Markdown/MdPreview/index.vue"
 
 export interface IChatRecord {
   role: EChatType
@@ -30,7 +31,8 @@ const props = defineProps<Props>()
       <!-- <pre>
         {{ props.data.query }}
       </pre> -->
-      <QuillEditor :readOnly="true" :value="props.data.query" class="quill-editor-view" />
+      <!-- <QuillEditor :readOnly="true" :value="props.data.query" class="quill-editor-view" /> -->
+      <MdPreview :moduleValue="props.data.query" />
     </div>
   </div>
   <div :class="{ 'chat-record': true, 'chat-question': false }">
@@ -43,14 +45,15 @@ const props = defineProps<Props>()
           "An error occurred. If this issue persists please contact us through our help center at fufan.chat.com."
         }}
       </pre> -->
-      <QuillEditor
+      <!-- <QuillEditor
         :readOnly="true"
         :value="
           props.data.response ||
           'An error occurred. If this issue persists please contact us through our help center at fufan.chat.com.'
         "
         class="quill-editor-view"
-      />
+      /> -->
+      <MdPreview :moduleValue="props.data.response" />
     </div>
   </div>
 </template>
@@ -63,7 +66,7 @@ const props = defineProps<Props>()
 
   .chat-content {
     background-color: var(--el-bg-color);
-    border-radius: 4px;
+    border-radius: 8px;
     /* padding: 12px 16px; */
     position: relative;
     width: fit-content;

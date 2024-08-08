@@ -21,6 +21,7 @@ interface Props {
   onEnter?(value: string): void
   editorWrap?: string
   readOnly?: boolean
+  ploherholder?: string
 }
 
 const props = defineProps<Props>()
@@ -66,7 +67,7 @@ onMounted(() => {
         bindings
       }
     },
-    placeholder: "请输入...",
+    placeholder: props.ploherholder || "请输入...",
     readOnly: props.readOnly
   })
 
@@ -82,6 +83,7 @@ onMounted(() => {
   border-radius: var(--el-border-radius-base);
   overflow-y: auto;
   background-color: var(--el-bg-color);
+
   :deep(.ql-editor.ql-blank::before) {
     color: var(--el-text-color-placeholder);
   }

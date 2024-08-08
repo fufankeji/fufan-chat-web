@@ -1,5 +1,5 @@
 import { type RouteRecordRaw } from "vue-router"
-import { Coin, ChatLineRound } from "@element-plus/icons-vue"
+import { Coin, ChatLineRound, Search } from "@element-plus/icons-vue"
 
 const Layouts = () => import("@/layouts/index.vue")
 
@@ -25,9 +25,9 @@ export const chatRoutes: RouteRecordRaw[] = [
       {
         path: "/chat1",
         component: () => import("@/views/chat1/index.vue"),
-        name: "对话1",
+        name: "AI搜索",
         props: {
-          icon: ChatLineRound
+          icon: Search
         }
       },
       {

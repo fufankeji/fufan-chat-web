@@ -118,7 +118,7 @@ defineExpose<IChatRecordsRef>({
     <div class="chat-records" ref="chatRecordsRef">
       <ChatRecord v-for="(record, index) in chatRecords" :key="index" :data="record" />
     </div>
-    <QuillEditor class="quill-editor" :value="inputValue" :onEnter="onSend" />
+    <QuillEditor class="quill-editor" ploherholder="Enter发送；Shift+Enter换行" :value="inputValue" :onEnter="onSend" />
   </div>
 </template>
 

@@ -5,6 +5,14 @@ import ChatRecords, { type IChatRecordsRef } from "./ChatRecords.vue"
 
 const chatRecordsRef = ref<IChatRecordsRef>()
 const chatHistoryRef = ref<IChatHistoryRef>()
+const options = [
+  {
+    label: "选项1",
+    value: "1",
+    disabled: false
+  }
+]
+const value = ref("1")
 
 // 选中历史对话聊天
 function onSelectChatHistory(id: string, name: string) {
@@ -23,6 +31,15 @@ function onSetChatTitle(id: string, name: string) {
   </el-aside>
   <el-container>
     <el-main class="layout-main">
+      <el-select v-model="value" placeholder="Select" style="width: 240px">
+        <el-option
+          v-for="item in options"
+          :key="item.value"
+          :label="item.label"
+          :value="item.value"
+          :disabled="item.disabled"
+        />
+      </el-select>
       <ChatRecords ref="chatRecordsRef" :onSetChatTitle="onSetChatTitle" />
     </el-main>
   </el-container>
