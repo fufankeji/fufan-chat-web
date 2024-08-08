@@ -21,7 +21,7 @@ const props = defineProps<Props>()
 .md-editor-wrap {
   border-radius: var(--el-border-radius-base);
   :deep(.md-editor-preview-wrapper) {
-    padding: 4px 16px;
+    padding: 0 16px;
     background-color: var(--el-bg-color);
   }
   :deep(.md-editor-preview) {
