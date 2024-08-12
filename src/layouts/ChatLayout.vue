@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import { ref, onMounted, watch, computed } from "vue"
 import { useRoute } from "vue-router"
-import { Expand, Fold } from "@element-plus/icons-vue"
-import RightDrawer from "./components/RightDrawer/index.vue"
-import ChatParams from "./components/RightDrawer/ChatParams.vue"
+// import { Expand, Fold } from "@element-plus/icons-vue"
+// import RightDrawer from "./components/RightDrawer/index.vue"
+// import ChatParams from "./components/RightDrawer/ChatParams.vue"
 import { usePermissionStore } from "@/store/modules/permission"
 
 const activeIndex = ref<string>("")
-const collapse = ref<boolean>(true)
+const collapse = ref<boolean>(false)
 const route = useRoute()
 const permissionStore = usePermissionStore()
 const routes = computed(() => {
@@ -37,20 +37,23 @@ function setActiveIndex() {
 
 <template>
   <el-container class="app-chat-container">
-    <el-menu :collapse="collapse" :default-active="activeIndex" router class="menu">
+    <el-aside class="app-chat-aside">
+      <div class="logo">FuFan-Chat</div>
       <el-scrollbar>
-        <el-menu-item v-for="route in routes" :key="route.path" :index="route.path">
-          <el-icon><component :is="(route.props as any)?.icon" /></el-icon>
-          <template #title>{{ route.name }}</template>
-        </el-menu-item>
+        <el-menu :collapse="collapse" :default-active="activeIndex" router class="menu">
+          <el-menu-item v-for="route in routes" :key="route.path" :index="route.path">
+            <el-icon><component :is="(route.props as any)?.icon" /></el-icon>
+            <template #title>{{ route.name }}</template>
+          </el-menu-item>
+          <!-- <el-divider class="divider" />
+          <el-button :icon="collapse ? Expand : Fold" @click="collapse = !collapse" class="expand-btn" plain /> -->
+        </el-menu>
       </el-scrollbar>
-      <el-divider class="divider" />
-      <el-button :icon="collapse ? Expand : Fold" @click="collapse = !collapse" class="expand-btn" plain />
-    </el-menu>
+    </el-aside>
     <!-- component slot -->
-    <RightDrawer>
+    <!-- <RightDrawer>
       <ChatParams />
-    </RightDrawer>
+    </RightDrawer> -->
     <router-view />
   </el-container>
 </template>
@@ -62,21 +65,56 @@ $btn-width-percent-100: 100%;
   width: 100%;
   height: 100vh;
 
-  .menu {
-    text-align: center;
-    display: flex;
-    flex-direction: column;
-  }
+  .app-chat-aside {
+    background-color: #001529;
+    width: 200px;
 
-  .divider {
-    margin: auto auto 12px auto;
-  }
+    .logo {
+      height: 32px;
+      margin: 16px;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 6px;
+      color: #fff;
+      text-align: left;
+      line-height: 32px;
+      text-indent: 16px;
+    }
 
-  .expand-btn {
-    font-size: 20px;
-    // margin: auto auto 12px auto;
-    margin-bottom: 12px;
-    border: none;
+    .menu {
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      background-color: #001529;
+      border: none;
+
+      :deep(.el-menu-item) {
+        height: 40px;
+        margin: 4px;
+        border-radius: 8px;
+        color: rgba($color: #fff, $alpha: 0.65);
+
+        &:hover {
+          background-color: #001529;
+          color: #fff;
+        }
+      }
+
+      :deep(.el-menu-item.is-active) {
+        background-color: #1677ff;
+        color: #fff;
+      }
+    }
+
+    .divider {
+      margin: auto auto 12px auto;
+    }
+
+    .expand-btn {
+      font-size: 20px;
+      // margin: auto auto 12px auto;
+      margin-bottom: 12px;
+      border: none;
+    }
   }
 }
 </style>

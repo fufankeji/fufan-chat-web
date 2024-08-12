@@ -106,7 +106,10 @@ defineExpose<IChatRecordsRef>({
     <div class="chat-records" ref="chatRecordsRef">
       <ChatRecord v-for="(record, index) in chatRecords" :key="index" :data="record" />
     </div>
-    <QuillEditor class="quill-editor" :value="inputValue" :onEnter="onSend" />
+    <div>
+      <el-button class="new-chat">新建对话</el-button>
+      <QuillEditor class="quill-editor" :value="inputValue" :onEnter="onSend" />
+    </div>
   </div>
 </template>
 
@@ -123,6 +126,10 @@ defineExpose<IChatRecordsRef>({
     /* padding: 8px; */
     overflow: auto;
     padding: 24px 0;
+  }
+
+  .new-chat {
+    margin-bottom: 8px;
   }
 
   .quill-editor {

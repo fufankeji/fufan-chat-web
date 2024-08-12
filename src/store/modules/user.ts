@@ -35,7 +35,6 @@ export const useUserStore = defineStore("user", () => {
 
   const register = async ({ username, password }: UsersRegisterRequestData) => {
     const data = await usersRegister({ username, password })
-    console.log(data)
     setToken(data.id)
     token.value = data.id
   }
