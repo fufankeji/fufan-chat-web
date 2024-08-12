@@ -1,6 +1,6 @@
 <template>
-  <el-select style="width: 160px">
-    <el-option v-for="item in options" :label="item.label" :key="item.value" />
+  <el-select style="width: 160px" :value="value">
+    <el-option v-for="item in options" :label="item.label" :key="item.value" :value="item.value" />
   </el-select>
 </template>
 
@@ -14,7 +14,9 @@ interface IOption {
 }
 
 const options = ref<IOption[]>([])
-// interface Props {}
+const value = ref("")
+// interface Props {
+// }
 // const props = defineProps<Props>()
 
 onMounted(async () => {
