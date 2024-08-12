@@ -5,8 +5,10 @@ import { useTagsViewStore } from "./tags-view"
 import { useSettingsStore } from "./settings"
 import { getToken, removeToken, setToken } from "@/utils/cache/cookies"
 import { resetRouter } from "@/router"
-import { loginApi, getUserInfoApi } from "@/api/login"
-import { type LoginRequestData } from "@/api/login/types/login"
+// import { loginApi, getUserInfoApi } from "@/api/login"
+// import { type LoginRequestData } from "@/api/login/types/login"
+import { usersLogin, usersRegister } from "@/api/users"
+import { type UsersLoginRequestData, UsersRegisterRequestData } from "@/api/users/types/users"
 import routeSettings from "@/config/route"
 
 export const useUserStore = defineStore("user", () => {
@@ -19,18 +21,33 @@ export const useUserStore = defineStore("user", () => {
   const settingsStore = useSettingsStore()
 
   /** 登录 */
-  const login = async ({ username, password, code }: LoginRequestData) => {
-    const { data } = await loginApi({ username, password, code })
-    setToken(data.token)
-    token.value = data.token
+  // const login = async ({ username, password, code }: LoginRequestData) => {
+  //   const { data } = await loginApi({ username, password, code })
+  //   setToken(data.token)
+  //   token.value = data.token
+  // }
+
+  // 登录
+  const login = async ({ username, password }: UsersLoginRequestData) => {
+    const data = await usersLogin({ username, password })
+    token.value = data.username
   }
+
+  const register = async ({ username, password }: UsersRegisterRequestData) => {
+    const data = await usersRegister({ username, password })
+    console.log(data)
+    setToken(data.id)
+    token.value = data.id
+  }
+
   /** 获取用户详情 */
   const getInfo = async () => {
-    const { data } = await getUserInfoApi()
-    username.value = data.username
-    photo.value = data.photo
-    // 验证返回的 roles 是否为一个非空数组，否则塞入一个没有任何作用的默认角色，防止路由守卫逻辑进入无限循环
-    roles.value = data.roles?.length > 0 ? data.roles : routeSettings.defaultRoles
+    // const { data } = await getUserInfoApi()
+    // username.value = data.username
+    // photo.value = data.photo
+    // // 验证返回的 roles 是否为一个非空数组，否则塞入一个没有任何作用的默认角色，防止路由守卫逻辑进入无限循环
+    // roles.value = data.roles?.length > 0 ? data.roles : routeSettings.defaultRoles
+    roles.value = routeSettings.defaultRoles
   }
   /** 模拟角色变化 */
   const changeRoles = async (role: string) => {
@@ -62,7 +79,7 @@ export const useUserStore = defineStore("user", () => {
     }
   }
 
-  return { token, roles, username, photo, login, getInfo, changeRoles, logout, resetToken }
+  return { token, roles, username, photo, login, getInfo, register, changeRoles, logout, resetToken }
 })
 
 /** 在 setup 外使用 */

@@ -26,6 +26,7 @@ const loginFormData: LoginRequestData = reactive({
   password: "12345678",
   code: ""
 })
+const isRegister = ref<boolean>(false)
 /** 登录表单校验规则 */
 const loginFormRules: FormRules = {
   username: [{ required: true, message: "请输入用户名", trigger: "blur" }],
@@ -57,6 +58,32 @@ const handleLogin = () => {
     }
   })
 }
+
+const handleRegister = async () => {
+  loginFormRef.value?.validate((valid: boolean, fields) => {
+    if (valid) {
+      loading.value = true
+      console.log(loginFormRef)
+      useUserStore()
+        .register(loginFormData)
+        .then(() => {
+          // router.push({ path: "/" })
+          isRegister.value = false
+        })
+        .catch(() => {
+          createCode()
+          loginFormData.password = ""
+        })
+        .finally(() => {
+          loading.value = false
+        })
+    } else {
+      console.error("表单校验不通过", fields)
+      loading.value = false
+    }
+  })
+}
+
 /** 创建验证码 */
 const createCode = () => {
   // 先清空验证码的输入
@@ -131,8 +158,15 @@ createCode()
               </template>
             </el-input>
           </el-form-item> -->
-          <el-button :loading="loading" type="primary" size="large" @click.prevent="handleLogin">登 录</el-button>
+          <el-button v-if="isRegister" :loading="loading" type="primary" size="large" @click.prevent="handleRegister"
+            >注 册</el-button
+          >
+          <el-button v-else :loading="loading" type="primary" size="large" @click.prevent="handleLogin"
+            >登 录</el-button
+          >
         </el-form>
+        <el-link v-if="isRegister" class="register-link" @click="isRegister = !isRegister">去登陆</el-link>
+        <el-link v-else class="register-link" @click="isRegister = !isRegister">去注册</el-link>
       </div>
     </div>
   </div>
@@ -186,6 +220,10 @@ createCode()
       .el-button {
         width: 100%;
         margin-top: 10px;
+      }
+
+      .register-link {
+        margin-top: 4px;
       }
     }
   }
