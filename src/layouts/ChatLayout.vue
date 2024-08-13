@@ -2,8 +2,8 @@
 import { ref, onMounted, watch, computed } from "vue"
 import { useRoute } from "vue-router"
 // import { Expand, Fold } from "@element-plus/icons-vue"
-// import RightDrawer from "./components/RightDrawer/index.vue"
-// import ChatParams from "./components/RightDrawer/ChatParams.vue"
+import RightDrawer from "./components/RightDrawer/index.vue"
+import ChatParams from "./components/RightDrawer/ChatParams.vue"
 import { usePermissionStore } from "@/store/modules/permission"
 
 const activeIndex = ref<string>("")
@@ -51,9 +51,9 @@ function setActiveIndex() {
       </el-scrollbar>
     </el-aside>
     <!-- component slot -->
-    <!-- <RightDrawer>
+    <RightDrawer>
       <ChatParams />
-    </RightDrawer> -->
+    </RightDrawer>
     <router-view />
   </el-container>
 </template>

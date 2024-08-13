@@ -14,7 +14,7 @@ export function usersRegister(userInfo: Users.UsersRegisterRequestData) {
   return request<Users.UsersRegisterResponseData>({
     url: "/api/users/register",
     method: "post",
-    params: userInfo
+    data: userInfo
   })
 }
 
@@ -23,6 +23,6 @@ export function usersLogin(userInfo: Users.UsersLoginRequestData) {
   return request<Users.UsersLoginResponseData>({
     url: "/api/users/login",
     method: "post",
-    params: userInfo
+    data: userInfo
   })
 }
