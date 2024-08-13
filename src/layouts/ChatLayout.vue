@@ -39,16 +39,14 @@ function setActiveIndex() {
   <el-container class="app-chat-container">
     <el-aside class="app-chat-aside">
       <div class="logo">FuFan-Chat</div>
-      <el-scrollbar>
-        <el-menu :collapse="collapse" :default-active="activeIndex" router class="menu">
-          <el-menu-item v-for="route in routes" :key="route.path" :index="route.path">
-            <el-icon><component :is="(route.props as any)?.icon" /></el-icon>
-            <template #title>{{ route.name }}</template>
-          </el-menu-item>
-          <!-- <el-divider class="divider" />
+      <el-menu :collapse="collapse" :default-active="activeIndex" router class="menu">
+        <el-menu-item v-for="route in routes" :key="route.path" :index="route.path">
+          <el-icon><component :is="(route.props as any)?.icon" /></el-icon>
+          <template #title>{{ route.name }}</template>
+        </el-menu-item>
+        <!-- <el-divider class="divider" />
           <el-button :icon="collapse ? Expand : Fold" @click="collapse = !collapse" class="expand-btn" plain /> -->
-        </el-menu>
-      </el-scrollbar>
+      </el-menu>
     </el-aside>
     <!-- component slot -->
     <RightDrawer>
