@@ -2,7 +2,7 @@
 import { ref, reactive, onMounted, nextTick, defineExpose } from "vue";
 import { Plus, Edit, Delete } from "@element-plus/icons-vue";
 import { ElMessage, ElMessageBox } from "element-plus";
-import { usersUserIdConversations } from "@/api/users";
+// import { usersUserIdConversations } from "@/api/users";
 import type * as Users from "@/api/users/types/users";
 import { conversationsApi } from "@/api/conversations";
 import { useUserStore } from "@/store/modules/user";
@@ -128,17 +128,17 @@ function onSaveChatTitle() {
 
 // 挂载后做选中操作
 onMounted(async () => {
-    try {
-        const res = await usersUserIdConversations(userStore.token);
-        historys.value = res;
-    } catch (err) {
-        console.error(err);
-    }
-    if (historys.value[0]) {
-        onClickChatHistory(historys.value[0].id, historys.value[0].name);
-    } else {
-        onCreateNewChat();
-    }
+    // try {
+    //     const res = await usersUserIdConversations(userStore.token);
+    //     historys.value = res;
+    // } catch (err) {
+    //     console.error(err);
+    // }
+    // if (historys.value[0]) {
+    //     onClickChatHistory(historys.value[0].id, historys.value[0].name);
+    // } else {
+    //     onCreateNewChat();
+    // }
 });
 
 defineExpose<IChatHistoryRef>({
