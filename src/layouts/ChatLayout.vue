@@ -2,14 +2,17 @@
 import { ref, onMounted, watch, computed } from "vue"
 import { useRoute } from "vue-router"
 // import { Expand, Fold } from "@element-plus/icons-vue"
+import ChatHistory from "@/components/ChatHistory/index.vue"
 import RightDrawer from "./components/RightDrawer/index.vue"
 import ChatParams from "./components/RightDrawer/ChatParams.vue"
 import { usePermissionStore } from "@/store/modules/permission"
+import { useChatHistoryStore } from "@/store/modules/chatHistory"
 
 const activeIndex = ref<string>("")
 const collapse = ref<boolean>(false)
 const route = useRoute()
 const permissionStore = usePermissionStore()
+const chatHistoryStore = useChatHistoryStore()
 const routes = computed(() => {
   const chatRoute = permissionStore.routes.find((item) => {
     if (!item.meta?.hidden && item.redirect === "/chat") {
@@ -37,16 +40,36 @@ function setActiveIndex() {
 
 <template>
   <el-container class="app-chat-container">
-    <el-aside class="app-chat-aside">
-      <div class="logo">FuFan-Chat</div>
-      <el-menu :collapse="collapse" :default-active="activeIndex" router class="menu">
-        <el-menu-item v-for="route in routes" :key="route.path" :index="route.path">
-          <el-icon><component :is="(route.props as any)?.icon" /></el-icon>
-          <template #title>{{ route.name }}</template>
-        </el-menu-item>
-        <!-- <el-divider class="divider" />
+    <el-aside
+      :class="{
+        'app-chat-aside': true,
+        width200: !chatHistoryStore.show_history,
+        width386: chatHistoryStore.show_history
+      }"
+    >
+      <div class="app-chat-aside-left">
+        <div class="logo">
+          FuFan-Chat
+          <el-tooltip content="历史记录">
+            <el-icon
+              class="history_icon"
+              @click="() => chatHistoryStore.setShowHistory(!chatHistoryStore.show_history)"
+              v-show="!chatHistoryStore.show_history"
+            >
+              <Operation />
+            </el-icon>
+          </el-tooltip>
+        </div>
+        <el-menu :collapse="collapse" :default-active="activeIndex" router class="menu">
+          <el-menu-item v-for="route in routes" :key="route.path" :index="route.path">
+            <el-icon><component :is="(route.props as any)?.icon" /></el-icon>
+            <template #title>{{ route.name }}</template>
+          </el-menu-item>
+          <!-- <el-divider class="divider" />
           <el-button :icon="collapse ? Expand : Fold" @click="collapse = !collapse" class="expand-btn" plain /> -->
-      </el-menu>
+        </el-menu>
+      </div>
+      <ChatHistory v-show="chatHistoryStore.show_history" />
     </el-aside>
     <!-- component slot -->
     <RightDrawer>
@@ -64,8 +87,13 @@ $btn-width-percent-100: 100%;
   height: 100vh;
 
   .app-chat-aside {
-    background-color: #001529;
-    width: 200px;
+    // width: 200px;
+    display: flex;
+
+    .app-chat-aside-left {
+      background-color: #001529;
+      width: 200px;
+    }
 
     .logo {
       height: 32px;
@@ -75,7 +103,17 @@ $btn-width-percent-100: 100%;
       color: #fff;
       text-align: left;
       line-height: 32px;
-      text-indent: 16px;
+      padding: 0 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      .history_icon {
+        line-height: 32px;
+        &:hover {
+          cursor: pointer;
+        }
+      }
     }
 
     .menu {
@@ -113,6 +151,14 @@ $btn-width-percent-100: 100%;
       margin-bottom: 12px;
       border: none;
     }
+  }
+
+  .width200 {
+    width: 200px;
+  }
+
+  .width386 {
+    width: 386px;
   }
 }
 </style>

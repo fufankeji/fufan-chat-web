@@ -15,7 +15,7 @@ export const useUserStore = defineStore("user", () => {
   const token = ref<string>(getToken() || "")
   const roles = ref<string[]>([])
   const username = ref<string>("")
-  const photo = ref<string>("")
+  const photo = ref<string>("https://sfile.chatglm.cn/activeimg/bdms/66135a5a1bfb5b0037b2bd52")
 
   const tagsViewStore = useTagsViewStore()
   const settingsStore = useSettingsStore()

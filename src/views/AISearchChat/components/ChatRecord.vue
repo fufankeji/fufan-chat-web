@@ -28,10 +28,6 @@ const props = defineProps<Props>()
     <el-avatar :size="24" :src="userStore.photo">{{ userStore.username?.[0] }} </el-avatar>
     <div class="chat-content">
       <el-text type="info" class="time">{{ props.data.create_time }}</el-text>
-      <!-- <pre>
-        {{ props.data.query }}
-      </pre> -->
-      <!-- <QuillEditor :readOnly="true" :value="props.data.query" class="quill-editor-view" /> -->
       <MdPreview :moduleValue="props.data.query" />
     </div>
   </div>
@@ -39,30 +35,21 @@ const props = defineProps<Props>()
     <el-avatar :size="24" :src="systemPhoto">{{ EChatType.SYSTEM }} </el-avatar>
     <div :class="{ 'chat-content': true, 'chat-error': !props.data.response }">
       <el-text type="info" class="time">{{ props.data.create_time }}</el-text>
-      <!-- <pre>
-        {{
-          props.data.response ||
-          "An error occurred. If this issue persists please contact us through our help center at fufan.chat.com."
-        }}
-      </pre> -->
-      <!-- <QuillEditor
-        :readOnly="true"
-        :value="
-          props.data.response ||
-          'An error occurred. If this issue persists please contact us through our help center at fufan.chat.com.'
-        "
-        class="quill-editor-view"
-      /> -->
+      <div class="ai-search-content">22222</div>
       <MdPreview :moduleValue="props.data.response" />
     </div>
   </div>
 </template>
 
-<style scoped>
+<style scoped lang="scss">
 .chat-record {
   display: flex;
   gap: 8px;
   margin-top: 24px;
+
+  :deep(.el-avatar) {
+    background-color: inherit;
+  }
 
   .chat-content {
     background-color: var(--el-bg-color);
@@ -87,10 +74,8 @@ const props = defineProps<Props>()
       display: block;
     }
 
-    pre {
-      overflow: hidden;
-      white-space: pre-line;
-      margin: 0 auto;
+    .ai-search-content {
+      margin: 16px 16px 0;
     }
   }
 

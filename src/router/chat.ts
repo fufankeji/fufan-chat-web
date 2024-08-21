@@ -23,8 +23,8 @@ export const chatRoutes: RouteRecordRaw[] = [
         }
       },
       {
-        path: "/chat1",
-        component: () => import("@/views/chat1/index.vue"),
+        path: "/AISearch",
+        component: () => import("@/views/AISearchChat/index.vue"),
         name: "AI搜索",
         props: {
           icon: Search
