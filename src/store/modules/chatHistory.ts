@@ -11,8 +11,10 @@ export const useChatHistoryStore = defineStore("chatHistory", () => {
 
     const userStore = useUserStore();
 
+    // 设置显示历史记录 & 获取会话列表
     const setShowHistory = async (value: boolean) => {
         show_history.value = value;
+        if (!value) return;
         const res = await usersUserIdConversations(userStore.token);
         conversations.value = res;
     };
