@@ -1,3 +1,5 @@
 export interface LlmModelsResponseData {
-  models: string[]
+    data: {
+        models: string[];
+    };
 }

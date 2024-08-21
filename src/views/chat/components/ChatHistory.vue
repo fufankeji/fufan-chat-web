@@ -51,7 +51,7 @@ function onScrollTop() {
 // 新建对话
 async function onCreateNewChat() {
     const name = "新对话";
-    const chat_type = chatStore.prompt_name;
+    const chat_type = chatStore.prompt_name as any;
     const res = await conversationsApi({ user_id: userStore.username, name, chat_type });
     historys.value.unshift({
         id: res.id,

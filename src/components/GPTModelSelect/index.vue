@@ -1,5 +1,5 @@
 <template>
-    <el-select style="width: 160px" :value="value">
+    <el-select style="width: 160px" v-model="value">
         <el-option v-for="item in options" :label="item.label" :key="item.value" :value="item.value" />
     </el-select>
 </template>
@@ -14,14 +14,14 @@ interface IOption {
 }
 
 const options = ref<IOption[]>([]);
-const value = ref("");
+const value = ref("chatglm3-6b");
 // interface Props {
 // }
 // const props = defineProps<Props>()
 
 onMounted(async () => {
     const data = await getLlmModelsApi();
-    options.value = data.models.map((item) => ({ label: item, value: item }));
+    options.value = data.data.models.map((item) => ({ label: item, value: item }));
 });
 </script>
 
