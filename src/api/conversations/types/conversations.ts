@@ -14,7 +14,7 @@ export interface ConversationsRequestData {
      * AI搜索页面：chat_with_search
      * 推荐系统页面：chat_with_recommend
      */
-    chat_type: ChatType; // 会话类型
+    chat_type: string; // 会话类型
 }
 
 export interface ConversationsResponseData {

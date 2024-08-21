@@ -8,6 +8,9 @@ import type * as Conversations from "@/api/conversations/types/conversations";
 import ChatRecord from "./ChatRecord.vue";
 import GPTModelSelect from "@/components/GPTModelSelect/index.vue";
 import { ElMessage } from "element-plus";
+import { conversationsApi } from "@/api/conversations";
+import { useUserStore } from "@/store/modules/user";
+import { useLlmModelStore } from "@/store/modules/llmModel";
 
 interface Props {
     onSetChatTitle(id: string, name: string): void;
@@ -18,6 +21,8 @@ export interface IChatRecordsRef {
 }
 
 const chatStore = useChatStore();
+const userStore = useUserStore();
+const llmModelStore = useLlmModelStore();
 const props = defineProps<Props>();
 let conversation_id = "";
 const chatRecords = ref<Conversations.ConversationsConversationsIdMessagesResponseData[]>([
@@ -46,10 +51,27 @@ function onScrollBottom() {
     });
 }
 
+// 新建对话
+async function onCreateNewChat(query?: string) {
+    const name = query || "新对话";
+    const chat_type = llmModelStore.model_name;
+    const res = await conversationsApi({ user_id: userStore.token, name, chat_type });
+    conversation_id = res.id;
+    // historys.value.unshift({
+    //     id: res.id,
+    //     name,
+    //     chat_type,
+    //     create_time: ""
+    // });
+    // onClickChatHistory(res.id, name);
+    // onScrollTop();
+}
+
 // 发送消息
 async function onSend(val: string) {
     if (!conversation_id) {
         ElMessage.warning("请先新建对话");
+        await onCreateNewChat(val);
         return;
     }
     const query = val.trim();
