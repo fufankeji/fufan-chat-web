@@ -1,4 +1,4 @@
 export enum EChatType {
-  SYSTEM = "SYSTEM",
-  USER = "USER"
+    SYSTEM = "SYSTEM",
+    USER = "USER"
 }
