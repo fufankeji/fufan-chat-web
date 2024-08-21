@@ -24,7 +24,7 @@ export const useChatHistoryStore = defineStore("chatHistory", () => {
         getConversations();
     };
 
-    return { setShowHistory, show_history };
+    return { setShowHistory, show_history, conversations };
 });
 
 /** 在 setup 外使用 */

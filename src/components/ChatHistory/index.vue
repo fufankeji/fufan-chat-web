@@ -157,7 +157,7 @@ defineExpose<IChatHistoryRef>({
         <el-button :icon="Plus" class="create-chat-btn" @click="onCreateNewChat">新建对话</el-button>
         <ul class="history-list" ref="historyListUlRef">
             <li
-                v-for="item in historys"
+                v-for="item in chatHistoryStore.conversations"
                 :key="item.id"
                 @mouseenter="hoverId = item.id"
                 @mouseleave="hoverId = undefined"
@@ -222,28 +222,31 @@ $btn-width-percent-100: 100%;
     .create-chat-btn {
         // width: $btn-width-percent-100;
         justify-content: flex-start;
-        margin: 12px 16px;
+        margin: 12px 8px 0;
     }
 
     .history-list {
         padding-inline-start: 0;
         flex: 1;
         overflow: auto;
+        padding: 0 8px;
         > li {
             display: flex;
             align-items: center;
             padding: 0 16px;
             /* justify-content: center; */
             height: 36px;
-            background-color: var(--el-fill-color-lighter);
-            margin: 8px 0 0;
+            // background-color: var(--el-fill-color-lighter);
+            // margin: 8px 0 0;
             /* color: var(--el-color-info); */
             border-radius: 4px;
             font-size: 14px;
             cursor: pointer;
+            color: #fff;
 
             &:hover {
-                background-color: var(--el-color-primary-light-8);
+                // background-color: var(--el-color-primary-light-8);
+                background-color: #252728;
             }
 
             &:nth-of-type(1) {
@@ -269,7 +272,8 @@ $btn-width-percent-100: 100%;
         }
 
         .active {
-            background-color: var(--el-color-primary-light-8);
+            // background-color: var(--el-color-primary-light-8);
+            background-color: #252728;
         }
     }
 }
