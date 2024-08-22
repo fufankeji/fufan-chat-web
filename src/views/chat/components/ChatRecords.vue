@@ -6,18 +6,13 @@ import { type ChatRequestData, IMessageData } from "@/api/chat/types/chat";
 import { conversationsConversationsIdMessagesApi } from "@/api/conversations";
 import type * as Conversations from "@/api/conversations/types/conversations";
 import ChatRecord from "./ChatRecord.vue";
-import { ElMessage } from "element-plus";
-
-// interface Props {
-//     onSetChatTitle(id: string, name: string): void;
-// }
+import GPTModelSelect from "@/components/GPTModelSelect/index.vue";
 
 export interface IChatRecordsRef {
     onChangeChat(id: string, name: string): void;
 }
 
 const chatStore = useChatStore();
-// const props = defineProps<Props>();
 let conversation_id = "";
 const chatRecords = ref<Conversations.ConversationsConversationsIdMessagesResponseData[]>([]);
 const chatRecordsRef = ref<HTMLDivElement | null>(null);
@@ -35,10 +30,6 @@ function onScrollBottom() {
 
 // 发送消息
 async function onSend(val: string) {
-    if (!conversation_id) {
-        ElMessage.warning("请先新建对话");
-        return;
-    }
     const query = val.trim();
     if (!query) {
         return;
@@ -102,7 +93,10 @@ defineExpose<IChatRecordsRef>({
             <ChatRecord v-for="(record, index) in chatRecords" :key="index" :data="record" />
         </div>
         <div>
-            <el-button class="new-chat">新建对话</el-button>
+            <div class="chat-input-top">
+                <el-button class="new-chat">新建对话</el-button>
+                <GPTModelSelect />
+            </div>
             <QuillEditor class="quill-editor" :value="inputValue" :onEnter="onSend" />
         </div>
     </div>
@@ -123,8 +117,11 @@ defineExpose<IChatRecordsRef>({
         padding: 24px 0;
     }
 
-    .new-chat {
+    .chat-input-top {
+        display: flex;
+        align-items: center;
         margin-bottom: 8px;
+        gap: 8px;
     }
 
     .quill-editor {

@@ -2,12 +2,11 @@
 import { ref, nextTick, defineExpose } from "vue"; // onMounted, onBeforeUnmount
 import QuillEditor from "@/components/RichTextEditor/index.vue";
 import { useChatStore } from "@/store/modules/chat";
-import { type ChatRequestData, IMessageData } from "@/api/chat/types/chat";
+import { IMessageData } from "@/api/chat/types/chat";
 import { conversationsConversationsIdMessagesApi } from "@/api/conversations";
 import type * as Conversations from "@/api/conversations/types/conversations";
 import ChatRecord from "./ChatRecord.vue";
 import GPTModelSelect from "@/components/GPTModelSelect/index.vue";
-import { ElMessage } from "element-plus";
 import { conversationsApi } from "@/api/conversations";
 import { useUserStore } from "@/store/modules/user";
 // import { useLlmModelStore } from "@/store/modules/llmModel";
@@ -24,7 +23,7 @@ const chatStore = useChatStore();
 const userStore = useUserStore();
 // const llmModelStore = useLlmModelStore();
 // const props = defineProps<Props>();
-let conversation_id = "";
+const conversation_id = "";
 const chatRecords = ref<Conversations.ConversationsConversationsIdMessagesResponseData[]>([
     {
         id: "string", // 消息ID
@@ -56,24 +55,13 @@ async function onCreateNewChat(query?: string) {
     const name = query || "新对话";
     const chat_type = chatStore.chat_type;
     const res = await conversationsApi({ user_id: userStore.token, name, chat_type });
-    conversation_id = res.id;
-    // historys.value.unshift({
-    //     id: res.id,
-    //     name,
-    //     chat_type,
-    //     create_time: ""
-    // });
-    // onClickChatHistory(res.id, name);
+    chatStore.onSelectConversation(res.id);
     // onScrollTop();
 }
 
 // 发送消息
 async function onSend(val: string) {
-    if (!conversation_id) {
-        ElMessage.warning("请先新建对话");
-        await onCreateNewChat(val);
-        return;
-    }
+    await onCreateNewChat(val);
     const query = val.trim();
     if (!query) {
         return;
@@ -87,17 +75,13 @@ async function onSend(val: string) {
         create_time: ""
     };
     chatRecords.value.push(chatRecord);
-    // 重新设置会话名称
-    // if (chatRecords.value.length === 1) {
-    //     props.onSetChatTitle(conversation_id, query);
-    // }
     onScrollBottom();
     // 发送接受消息
     try {
         const params = {
             query: val,
             conversation_id
-        } as ChatRequestData;
+        };
         chatStore.chat(params, {
             onmessage: async (data: IMessageData) => {
                 const res = JSON.parse(data.data);
@@ -118,7 +102,6 @@ async function onSend(val: string) {
 // 切换聊天&缓存之前的聊天
 async function onChangeChat(id: string) {
     if (!id) return;
-    conversation_id = id;
     const res = await conversationsConversationsIdMessagesApi(id);
     chatRecords.value = res;
     inputValue.value = "";
