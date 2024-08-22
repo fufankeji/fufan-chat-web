@@ -53,7 +53,7 @@ function onScrollTop() {
 // 新建对话
 async function onCreateNewChat() {
     const res = await conversationsApi({
-        user_id: userStore.username,
+        user_id: userStore.token,
         name: "新对话",
         chat_type: chatStore.chat_type
     });
