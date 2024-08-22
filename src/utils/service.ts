@@ -27,7 +27,7 @@ function createService() {
             const apiData = response.data;
             // 二进制数据则直接返回
             const responseType = response.request?.responseType;
-            if (response.request.status === 200 || response.request.status === 201) {
+            if (response.request.status === 200 || response.request.status === 201 || response.request.status === 204) {
                 return apiData;
             }
             if (responseType === "blob" || responseType === "arraybuffer") return apiData;

@@ -22,7 +22,7 @@ export function deleteConversationById(conversationId: string) {
 export function updateConversationName(data: { conversationId: string; name: string }) {
     return request({
         url: `/api/conversations/${data.conversationId}/update_name`,
-        method: "delete",
+        method: "put",
         data: {
             name: data.name
         }
