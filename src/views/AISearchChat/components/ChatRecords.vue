@@ -10,11 +10,11 @@ import GPTModelSelect from "@/components/GPTModelSelect/index.vue";
 import { ElMessage } from "element-plus";
 import { conversationsApi } from "@/api/conversations";
 import { useUserStore } from "@/store/modules/user";
-import { useLlmModelStore } from "@/store/modules/llmModel";
+// import { useLlmModelStore } from "@/store/modules/llmModel";
 
-interface Props {
-    onSetChatTitle(id: string, name: string): void;
-}
+// interface Props {
+//     onSetChatTitle(id: string, name: string): void;
+// }
 
 export interface IChatRecordsRef {
     onChangeChat(id: string, name: string): void;
@@ -22,14 +22,14 @@ export interface IChatRecordsRef {
 
 const chatStore = useChatStore();
 const userStore = useUserStore();
-const llmModelStore = useLlmModelStore();
-const props = defineProps<Props>();
+// const llmModelStore = useLlmModelStore();
+// const props = defineProps<Props>();
 let conversation_id = "";
 const chatRecords = ref<Conversations.ConversationsConversationsIdMessagesResponseData[]>([
     {
         id: "string", // 消息ID
         conversation_id: "string", // 会话ID
-        chat_type: "string", // 会话类型
+        chat_type: chatStore.chat_type, // 会话类型
         query: "string", // 用户输入
         response: "[aa](https://baidu.com/)", // AI回答
         meta_data: {},
@@ -54,7 +54,7 @@ function onScrollBottom() {
 // 新建对话
 async function onCreateNewChat(query?: string) {
     const name = query || "新对话";
-    const chat_type = llmModelStore.model_name;
+    const chat_type = chatStore.chat_type;
     const res = await conversationsApi({ user_id: userStore.token, name, chat_type });
     conversation_id = res.id;
     // historys.value.unshift({
@@ -81,16 +81,16 @@ async function onSend(val: string) {
     const chatRecord: Conversations.ConversationsConversationsIdMessagesResponseData = {
         id: "", // 消息ID
         conversation_id, // 会话ID
-        chat_type: "", // 会话类型
+        chat_type: chatStore.chat_type, // 会话类型
         query, // 用户输入
         response: "", // AI回答
         create_time: ""
     };
     chatRecords.value.push(chatRecord);
     // 重新设置会话名称
-    if (chatRecords.value.length === 1) {
-        props.onSetChatTitle(conversation_id, query);
-    }
+    // if (chatRecords.value.length === 1) {
+    //     props.onSetChatTitle(conversation_id, query);
+    // }
     onScrollBottom();
     // 发送接受消息
     try {

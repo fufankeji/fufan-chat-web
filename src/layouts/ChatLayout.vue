@@ -8,6 +8,7 @@ import ChatParams from "./components/RightDrawer/ChatParams.vue";
 import { usePermissionStore } from "@/store/modules/permission";
 import { useChatHistoryStore } from "@/store/modules/chatHistory";
 import { useLlmModelStore } from "@/store/modules/llmModel";
+import { useChatStore } from "@/store/modules/chat";
 
 const activeIndex = ref<string>("");
 const collapse = ref<boolean>(false);
@@ -15,6 +16,7 @@ const route = useRoute();
 const permissionStore = usePermissionStore();
 const chatHistoryStore = useChatHistoryStore();
 const llmModelStore = useLlmModelStore();
+const chatStore = useChatStore();
 const routes = computed(() => {
     const chatRoute = permissionStore.routes.find((item) => {
         if (!item.meta?.hidden && item.redirect === "/chat") {
@@ -33,6 +35,7 @@ watch(
     () => route.path,
     () => {
         setActiveIndex();
+        chatStore.setChatType(route.path);
     }
 );
 

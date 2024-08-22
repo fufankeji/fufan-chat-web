@@ -1,13 +1,13 @@
 <script setup lang="ts">
-import { ref, reactive, onMounted, nextTick, defineExpose } from "vue";
+import { ref, reactive, nextTick, defineExpose } from "vue";
 import { Plus, Edit, Delete } from "@element-plus/icons-vue";
 import { ElMessage, ElMessageBox } from "element-plus";
 // import { usersUserIdConversations } from "@/api/users";
 import type * as Users from "@/api/users/types/users";
 import { conversationsApi } from "@/api/conversations";
 import { useUserStore } from "@/store/modules/user";
-import { useChatStore } from "@/store/modules/chat";
 import { useChatHistoryStore } from "@/store/modules/chatHistory";
+import { useChatStore } from "@/store/modules/chat";
 
 interface Props {
     onSelectChatHistory?(id: string, name?: string): void;
@@ -18,8 +18,8 @@ export interface IChatHistoryRef {
 }
 
 const userStore = useUserStore();
-const chatStore = useChatStore();
 const chatHistoryStore = useChatHistoryStore();
+const chatStore = useChatStore();
 const props = defineProps<Props>();
 const historyListUlRef = ref<HTMLDivElement | null>(null);
 const historys = ref<Users.UsersUserIdConversationsResponseData[]>([]);
@@ -52,17 +52,15 @@ function onScrollTop() {
 
 // 新建对话
 async function onCreateNewChat() {
-    const name = "新对话";
-    const chat_type = chatStore.prompt_name as any;
-    const res = await conversationsApi({ user_id: userStore.username, name, chat_type });
-    historys.value.unshift({
-        id: res.id,
-        name,
-        chat_type,
-        create_time: ""
+    const res = await conversationsApi({
+        user_id: userStore.username,
+        name: "新对话",
+        chat_type: chatStore.chat_type
     });
-    onClickChatHistory(res.id, name);
-    onScrollTop();
+    console.log(res);
+    chatHistoryStore.getConversations();
+    // onClickChatHistory(res.id);
+    // onScrollTop();
 }
 
 // 删除历史对话
@@ -125,21 +123,6 @@ function onSaveChatTitle() {
     });
     onCloseEditChatTitleDialog();
 }
-
-// 挂载后做选中操作
-onMounted(async () => {
-    // try {
-    //     const res = await usersUserIdConversations(userStore.token);
-    //     historys.value = res;
-    // } catch (err) {
-    //     console.error(err);
-    // }
-    // if (historys.value[0]) {
-    //     onClickChatHistory(historys.value[0].id, historys.value[0].name);
-    // } else {
-    //     onCreateNewChat();
-    // }
-});
 
 defineExpose<IChatHistoryRef>({
     setChatTitle

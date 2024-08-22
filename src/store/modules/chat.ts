@@ -4,14 +4,28 @@ import { defineStore } from "pinia";
 import { useUserStore } from "./user";
 import { chatApi } from "@/api/chat";
 import { type ChatRequestData, ChatFetchEventOptions } from "@/api/chat/types/chat";
+import { ChatType } from "@/api/conversations/types/conversations";
+
+const pathChatTypeMap: { [key: string]: ChatType } = {
+    "/chat": ChatType.GENERAL_CHAT,
+    "/AISearch": ChatType.CHAT_WITH_SEARCH,
+    "/knowledge": ChatType.CHAT_WITH_RETRIEVAL,
+    "/recommend": ChatType.CHAT_WITH_RECOMMEND
+};
 
 export const useChatStore = defineStore("chat", () => {
+    const chat_type = ref<ChatType>(ChatType.GENERAL_CHAT);
     const history_len = ref<number>(3);
     const model_name = ref<string>("chatglm3-6b"); // zhipu-api | chatglm3-6b
     const temperature = ref<number>(0.8);
     const prompt_name = ref<string>("llm_chat");
 
     const userStore = useUserStore();
+
+    // 设置对话类型
+    const setChatType = (type: string) => {
+        chat_type.value = pathChatTypeMap[type] || ChatType.GENERAL_CHAT;
+    };
 
     /** 对话 */
     const chat = async (params: ChatRequestData, chatFetchEventOptions: ChatFetchEventOptions) => {
@@ -30,7 +44,7 @@ export const useChatStore = defineStore("chat", () => {
         );
     };
 
-    return { chat, history_len, model_name, temperature, prompt_name };
+    return { chat, setChatType, history_len, model_name, temperature, prompt_name, chat_type };
 });
 
 /** 在 setup 外使用 */

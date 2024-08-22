@@ -8,16 +8,16 @@ import type * as Conversations from "@/api/conversations/types/conversations";
 import ChatRecord from "./ChatRecord.vue";
 import { ElMessage } from "element-plus";
 
-interface Props {
-    onSetChatTitle(id: string, name: string): void;
-}
+// interface Props {
+//     onSetChatTitle(id: string, name: string): void;
+// }
 
 export interface IChatRecordsRef {
     onChangeChat(id: string, name: string): void;
 }
 
 const chatStore = useChatStore();
-const props = defineProps<Props>();
+// const props = defineProps<Props>();
 let conversation_id = "";
 const chatRecords = ref<Conversations.ConversationsConversationsIdMessagesResponseData[]>([]);
 const chatRecordsRef = ref<HTMLDivElement | null>(null);
@@ -46,16 +46,16 @@ async function onSend(val: string) {
     const chatRecord: Conversations.ConversationsConversationsIdMessagesResponseData = {
         id: "", // 消息ID
         conversation_id, // 会话ID
-        chat_type: "", // 会话类型
+        chat_type: chatStore.chat_type, // 会话类型
         query, // 用户输入
         response: "", // AI回答
         create_time: ""
     };
     chatRecords.value.push(chatRecord);
     // 重新设置会话名称
-    if (chatRecords.value.length === 1) {
-        props.onSetChatTitle(conversation_id, query);
-    }
+    // if (chatRecords.value.length === 1) {
+    //     props.onSetChatTitle(conversation_id, query);
+    // }
     onScrollBottom();
     // 发送接受消息
     try {
