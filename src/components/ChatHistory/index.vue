@@ -1,30 +1,18 @@
 <script setup lang="ts">
-import { ref, reactive, nextTick, defineExpose } from "vue";
+import { ref, reactive, nextTick } from "vue";
 import { Plus, Edit, Delete } from "@element-plus/icons-vue";
 import { ElMessage, ElMessageBox } from "element-plus";
-// import { usersUserIdConversations } from "@/api/users";
 import type * as Users from "@/api/users/types/users";
-import { conversationsApi } from "@/api/conversations";
+import { conversationsApi, deleteConversationById, updateConversationName } from "@/api/conversations";
 import { useUserStore } from "@/store/modules/user";
 import { useChatHistoryStore } from "@/store/modules/chatHistory";
 import { useChatStore } from "@/store/modules/chat";
 
-interface Props {
-    onSelectChatHistory?(id: string, name?: string): void;
-}
-
-export interface IChatHistoryRef {
-    setChatTitle(id: string, name: string): void;
-}
-
 const userStore = useUserStore();
 const chatHistoryStore = useChatHistoryStore();
 const chatStore = useChatStore();
-const props = defineProps<Props>();
 const historyListUlRef = ref<HTMLDivElement | null>(null);
-const historys = ref<Users.UsersUserIdConversationsResponseData[]>([]);
 const hoverId = ref<string>();
-const selectId = ref<string>();
 const editChatInfo = reactive<Users.UsersUserIdConversationsResponseData>({
     id: "",
     name: "",
@@ -34,10 +22,8 @@ const editChatInfo = reactive<Users.UsersUserIdConversationsResponseData>({
 const dialogVisible = ref<boolean>(false);
 
 // 点击聊天历史
-function onClickChatHistory(id: string, name: string) {
-    if (id === selectId.value) return;
-    selectId.value = id;
-    props.onSelectChatHistory?.(id, name);
+function onSelectConversation(id?: string) {
+    chatStore.onSelectConversation(id);
 }
 
 // 滚动到顶部
@@ -57,35 +43,24 @@ async function onCreateNewChat() {
         name: "新对话",
         chat_type: chatStore.chat_type
     });
-    console.log(res);
     chatHistoryStore.getConversations();
-    // onClickChatHistory(res.id);
-    // onScrollTop();
+    chatStore.onSelectConversation(res.id);
+    onScrollTop();
 }
 
 // 删除历史对话
-function onDeleteChatHistory(id: string) {
-    historys.value = historys.value.filter((item) => item.id !== id);
+async function onDeleteChatHistory(id: string) {
+    await deleteConversationById(id);
     ElMessage({
         type: "success",
         message: "删除成功"
     });
     // 若当前选中被删除则默认选中第一项并回到顶部
-    if (id === selectId.value && historys.value.length) {
-        onClickChatHistory(historys.value[0].id, historys.value[0].name);
-        onScrollTop();
-    }
+    onSelectConversation();
 }
 
 // 删除确认
 function onConfirmDeleteChatHistroy(id: string) {
-    if (historys.value.length === 1) {
-        ElMessage({
-            type: "warning",
-            message: "最后一条记录不可被删除"
-        });
-        return;
-    }
     ElMessageBox.confirm("删除后不可恢复，确认删除该对话吗？", "确认删除", { type: "warning" }).then(() => {
         onDeleteChatHistory(id);
     });
@@ -105,28 +80,18 @@ function onCloseEditChatTitleDialog() {
     dialogVisible.value = false;
 }
 
-// 修改聊天标题
-function setChatTitle(id: string, name: string) {
-    historys.value.map((item) => {
-        if (item.id === id) {
-            item.name = name;
-        }
-    });
-}
-
 // 保存修改聊天标题
-function onSaveChatTitle() {
-    setChatTitle(editChatInfo.id, editChatInfo.name);
+async function onSaveChatTitle() {
+    await updateConversationName({
+        conversationId: editChatInfo.id,
+        name: editChatInfo.name
+    });
     ElMessage({
         type: "success",
         message: "修改成功"
     });
     onCloseEditChatTitleDialog();
 }
-
-defineExpose<IChatHistoryRef>({
-    setChatTitle
-});
 </script>
 
 <template>
@@ -144,8 +109,8 @@ defineExpose<IChatHistoryRef>({
                 :key="item.id"
                 @mouseenter="hoverId = item.id"
                 @mouseleave="hoverId = undefined"
-                @click="() => onClickChatHistory(item.id, item.name)"
-                :class="{ active: selectId === item.id }"
+                @click="() => onSelectConversation(item.id)"
+                :class="{ active: chatStore.conversation_id === item.id }"
             >
                 <span class="chat-title">{{ item.name }}</span>
                 <span class="operate" v-show="hoverId === item.id" @click="(e) => e.stopPropagation()">
