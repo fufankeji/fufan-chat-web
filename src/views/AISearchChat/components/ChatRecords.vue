@@ -23,7 +23,6 @@ const chatStore = useChatStore();
 const userStore = useUserStore();
 // const llmModelStore = useLlmModelStore();
 // const props = defineProps<Props>();
-const conversation_id = "";
 const chatRecords = ref<Conversations.ConversationsConversationsIdMessagesResponseData[]>([
     {
         id: "string", // 消息ID
@@ -61,26 +60,26 @@ async function onCreateNewChat(query?: string) {
 
 // 发送消息
 async function onSend(val: string) {
-    await onCreateNewChat(val);
     const query = val.trim();
     if (!query) {
         return;
     }
+    !chatStore.conversation_id && (await onCreateNewChat(query));
     const chatRecord: Conversations.ConversationsConversationsIdMessagesResponseData = {
         id: "", // 消息ID
-        conversation_id, // 会话ID
+        conversation_id: chatStore.conversation_id, // 会话ID
         chat_type: chatStore.chat_type, // 会话类型
         query, // 用户输入
         response: "", // AI回答
         create_time: ""
     };
-    chatRecords.value.push(chatRecord);
+    chatStore.pushMsg(chatRecord);
     onScrollBottom();
     // 发送接受消息
     try {
         const params = {
             query: val,
-            conversation_id
+            conversation_id: chatStore.conversation_id
         };
         chatStore.chat(params, {
             onmessage: async (data: IMessageData) => {
@@ -117,7 +116,7 @@ defineExpose<IChatRecordsRef>({
 <template>
     <div class="main-center">
         <div class="chat-records" ref="chatRecordsRef">
-            <ChatRecord v-for="(record, index) in chatRecords" :key="index" :data="record" />
+            <ChatRecord v-for="(record, index) in chatStore.chat_history" :key="index" :data="record" />
         </div>
         <div>
             <div class="chat-input-top">

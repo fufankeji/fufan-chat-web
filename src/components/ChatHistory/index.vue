@@ -43,7 +43,7 @@ async function onCreateNewChat() {
         name: "新对话",
         chat_type: chatStore.chat_type
     });
-    chatHistoryStore.getConversations();
+    await chatHistoryStore.getConversations();
     chatStore.onSelectConversation(res.id);
     onScrollTop();
 }
@@ -51,6 +51,7 @@ async function onCreateNewChat() {
 // 删除历史对话
 async function onDeleteChatHistory(id: string) {
     await deleteConversationById(id);
+    await chatHistoryStore.getConversations();
     ElMessage({
         type: "success",
         message: "删除成功"
@@ -86,6 +87,7 @@ async function onSaveChatTitle() {
         conversationId: editChatInfo.id,
         name: editChatInfo.name
     });
+    await chatHistoryStore.getConversations();
     ElMessage({
         type: "success",
         message: "修改成功"
