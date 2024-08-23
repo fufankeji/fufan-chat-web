@@ -35,7 +35,15 @@ const props = defineProps<Props>();
         <el-avatar :size="24" :src="systemPhoto">{{ EChatType.SYSTEM }} </el-avatar>
         <div :class="{ 'chat-content': true, 'chat-error': !props.data.response }">
             <el-text type="info" class="time">{{ props.data.create_time }}</el-text>
-            <div class="ai-search-content">22222</div>
+            <div
+                v-show="Boolean(props.data.docs)"
+                class="ai-search-content"
+                v-for="(docsItem, index) in props.data.docs"
+                :key="index"
+            >
+                <MdPreview :moduleValue="docsItem" />
+            </div>
+            <MdPreview moduleValue="[docs](https://baidu.com)" />
             <MdPreview :moduleValue="props.data.response" />
         </div>
     </div>

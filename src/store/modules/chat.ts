@@ -71,9 +71,11 @@ export const useChatStore = defineStore("chat", () => {
         const res = JSON.parse(data.data);
         if (!chat_history.value) return;
         chat_history.value.map(async (item) => {
-            if (res && (item.id === res?.message_id || item.id === "") && res.text) {
-                item.response += res.text;
+            if (res && (item.id === res?.message_id || item.id === "")) {
                 item.id = res.message_id;
+                res.text && (item.response += res.text);
+                res.docs && (item.docs = res.docs);
+                res.search && (item.search = res.search);
             }
         });
         onScrollBottom.value?.();

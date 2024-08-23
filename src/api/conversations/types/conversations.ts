@@ -31,4 +31,6 @@ export interface ConversationsConversationsIdMessagesResponseData {
     feedback_souce?: number;
     feedback_reason?: string;
     create_time: string;
+    docs?: string[];
+    search?: string[];
 }
