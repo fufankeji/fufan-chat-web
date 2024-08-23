@@ -52,6 +52,7 @@ async function onSend(val: string) {
 
 onMounted(() => {
     onScrollBottom();
+    chatStore.setOnScrollBottom(onScrollBottom);
 });
 </script>
 
