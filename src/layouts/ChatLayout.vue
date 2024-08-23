@@ -49,13 +49,13 @@ function setActiveIndex() {
         <el-aside
             :class="{
                 'app-chat-aside': true,
-                width200: !chatHistoryStore.show_history,
-                width386: chatHistoryStore.show_history
+                width240: !chatHistoryStore.show_history,
+                width426: chatHistoryStore.show_history
             }"
         >
             <div class="app-chat-aside-left">
                 <div class="logo">
-                    FuFan-Chat
+                    <img src="/src/assets/img/logo/logo.jpg" height="32px" />
                     <el-tooltip content="历史记录">
                         <el-icon
                             class="history_icon"
@@ -98,24 +98,26 @@ $btn-width-percent-100: 100%;
 
         .app-chat-aside-left {
             background-color: #001529;
-            width: 200px;
+            width: 240px;
         }
 
         .logo {
-            height: 32px;
-            margin: 16px;
-            background: rgba(255, 255, 255, 0.2);
+            height: 48px;
+            margin: 16px 8px 12px 8px;
+            // background: rgba(255, 255, 255, 0.2);
+            background-color: rgba(255, 255, 255, 0.4);
             border-radius: 6px;
             color: #fff;
             text-align: left;
-            line-height: 32px;
-            padding: 0 16px;
+            line-height: 48px;
+            padding: 0 8px;
             display: flex;
             align-items: center;
             justify-content: space-between;
 
             .history_icon {
                 line-height: 32px;
+                font-size: 20px;
                 &:hover {
                     cursor: pointer;
                 }
@@ -159,12 +161,12 @@ $btn-width-percent-100: 100%;
         }
     }
 
-    .width200 {
-        width: 200px;
+    .width240 {
+        width: 240px;
     }
 
-    .width386 {
-        width: 386px;
+    .width426 {
+        width: 426px;
     }
 }
 </style>
