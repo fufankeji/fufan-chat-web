@@ -44,7 +44,7 @@ async function onSend(val: string) {
     !chatStore.conversation_id && (await onCreateNewChat(query));
     // 发送接受消息
     try {
-        chatStore.chat({ query });
+        chatStore.chatAISearch({ query });
     } catch (err) {
         console.error(err);
     }

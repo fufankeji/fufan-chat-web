@@ -2,7 +2,7 @@ import { ref } from "vue";
 import store from "@/store";
 import { defineStore } from "pinia";
 // import { useUserStore } from "./user";
-import { chatApi } from "@/api/chat";
+import { chatApi, chatAISearchApi } from "@/api/chat";
 import { type ChatRequestData, IMessageData } from "@/api/chat/types/chat";
 import { ChatType } from "@/api/conversations/types/conversations";
 import type * as Conversations from "@/api/conversations/types/conversations";
@@ -92,8 +92,22 @@ export const useChatStore = defineStore("chat", () => {
         );
     };
 
+    /** 对话 */
+    const chatAISearch = async (params: Pick<ChatRequestData, "query">) => {
+        pushMsg(params.query);
+        chatAISearchApi(
+            {
+                ...params,
+                conversation_id: conversation_id.value,
+                model_name: llmModelStore.model_name
+            },
+            { onmessage: chatOnmessage }
+        );
+    };
+
     return {
         chat,
+        chatAISearch,
         setChatType,
         onSelectConversation,
         setOnScrollBottom,
