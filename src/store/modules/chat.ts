@@ -3,7 +3,7 @@ import store from "@/store";
 import { defineStore } from "pinia";
 // import { useUserStore } from "./user";
 import { chatApi } from "@/api/chat";
-import { type ChatRequestData, ChatFetchEventOptions } from "@/api/chat/types/chat";
+import { type ChatRequestData, IMessageData } from "@/api/chat/types/chat";
 import { ChatType } from "@/api/conversations/types/conversations";
 import type * as Conversations from "@/api/conversations/types/conversations";
 import { useLlmModelStore } from "@/store/modules/llmModel";
@@ -16,10 +16,13 @@ const pathChatTypeMap: { [key: string]: ChatType } = {
     "/recommend": ChatType.CHAT_WITH_RECOMMEND
 };
 
+type TOnScrollBottom = () => void;
+
 export const useChatStore = defineStore("chat", () => {
     const chat_type = ref<ChatType>(ChatType.GENERAL_CHAT);
     const conversation_id = ref<string>("");
     const chat_history = ref<Conversations.ConversationsConversationsIdMessagesResponseData[]>();
+    const onScrollBottom = ref<TOnScrollBottom>();
 
     // const userStore = useUserStore();
     const llmModelStore = useLlmModelStore();
@@ -39,6 +42,11 @@ export const useChatStore = defineStore("chat", () => {
         getChatHistory();
     };
 
+    // 设置滚动函数
+    const setOnScrollBottom = (fn: TOnScrollBottom) => {
+        onScrollBottom.value = fn;
+    };
+
     // 获取聊天历史
     const getChatHistory = async () => {
         const res = await conversationsConversationsIdMessagesApi(conversation_id.value);
@@ -46,21 +54,41 @@ export const useChatStore = defineStore("chat", () => {
     };
 
     // 新增一条聊天记录
-    const pushMsg = (chatMsg: Conversations.ConversationsConversationsIdMessagesResponseData) => {
+    const pushMsg = (query: string) => {
+        const chatMsg: Conversations.ConversationsConversationsIdMessagesResponseData = {
+            id: "", // 消息ID
+            conversation_id: conversation_id.value, // 会话ID
+            chat_type: chat_type.value, // 会话类型
+            query, // 用户输入
+            response: "", // AI回答
+            create_time: ""
+        };
         chat_history.value?.push(chatMsg);
+        onScrollBottom.value?.();
+    };
+
+    const chatOnmessage = async (data: IMessageData) => {
+        const res = JSON.parse(data.data);
+        if (!chat_history.value) return;
+        chat_history.value.map(async (item) => {
+            if (res && (item.id === res?.message_id || item.id === "") && res.text) {
+                item.response += res.text;
+                item.id = res.message_id;
+            }
+        });
+        onScrollBottom.value?.();
     };
 
     /** 对话 */
-    const chat = async (
-        params: Pick<ChatRequestData, "conversation_id" | "query">,
-        chatFetchEventOptions: ChatFetchEventOptions
-    ) => {
+    const chat = async (params: Pick<ChatRequestData, "query">) => {
+        pushMsg(params.query);
         chatApi(
             {
                 ...params,
+                conversation_id: conversation_id.value,
                 model_name: llmModelStore.model_name
             },
-            chatFetchEventOptions
+            { onmessage: chatOnmessage }
         );
     };
 
@@ -68,7 +96,7 @@ export const useChatStore = defineStore("chat", () => {
         chat,
         setChatType,
         onSelectConversation,
-        pushMsg,
+        setOnScrollBottom,
         chat_type,
         conversation_id,
         chat_history
