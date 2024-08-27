@@ -3,8 +3,8 @@ import { ref, onMounted, watch, computed } from "vue";
 import { useRoute } from "vue-router";
 // import { Expand, Fold } from "@element-plus/icons-vue"
 import ChatHistory from "@/components/ChatHistory/index.vue";
-import RightDrawer from "./components/RightDrawer/index.vue";
-import ChatParams from "./components/RightDrawer/ChatParams.vue";
+// import RightDrawer from "./components/RightDrawer/index.vue";
+// import ChatParams from "./components/RightDrawer/ChatParams.vue";
 import { usePermissionStore } from "@/store/modules/permission";
 import { useChatHistoryStore } from "@/store/modules/chatHistory";
 import { useLlmModelStore } from "@/store/modules/llmModel";
@@ -68,7 +68,12 @@ function setActiveIndex() {
                     </el-tooltip>
                 </div>
                 <el-menu :collapse="collapse" :default-active="activeIndex" router class="menu">
-                    <el-menu-item v-for="route in routes" :key="route.path" :index="route.path">
+                    <el-menu-item
+                        v-for="route in routes"
+                        :key="route.path"
+                        :index="route.path"
+                        :disabled="route.path === '/knowledge'"
+                    >
                         <el-icon><component :is="(route.props as any)?.icon" /></el-icon>
                         <template #title>{{ route.name }}</template>
                     </el-menu-item>
@@ -79,9 +84,9 @@ function setActiveIndex() {
             <ChatHistory v-show="chatHistoryStore.show_history" />
         </el-aside>
         <!-- component slot -->
-        <RightDrawer>
+        <!-- <RightDrawer>
             <ChatParams />
-        </RightDrawer>
+        </RightDrawer> -->
         <router-view />
     </el-container>
 </template>

@@ -57,8 +57,10 @@ async function onDeleteChatHistory(id: string) {
         type: "success",
         message: "删除成功"
     });
-    // 若当前选中被删除则默认选中第一项并回到顶部
-    onSelectConversation();
+    if (chatStore.conversation_id === id) {
+        // 若当前选中被删除则默认选中第一项并回到顶部
+        chatStore.onSelectConversation();
+    }
 }
 
 // 删除确认

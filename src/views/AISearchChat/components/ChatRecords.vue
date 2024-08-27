@@ -66,7 +66,9 @@ onMounted(() => {
         </div>
         <div>
             <div class="chat-input-top">
-                <el-button class="new-chat">新建对话</el-button>
+                <el-tootip content="即将上线">
+                    <el-button class="new-chat" disabled>新建对话</el-button>
+                </el-tootip>
                 <GPTModelSelect />
             </div>
             <QuillEditor
