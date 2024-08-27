@@ -13,7 +13,7 @@ const chatHistoryStore = useChatHistoryStore();
 const chatStore = useChatStore();
 const historyListUlRef = ref<HTMLDivElement | null>(null);
 const hoverId = ref<string>();
-const editChatInfo = reactive<Users.UsersUserIdConversationsResponseData>({
+const editChatInfo = reactive<Users.ConversationItem>({
     id: "",
     name: "",
     chat_type: "",
@@ -24,6 +24,7 @@ const dialogVisible = ref<boolean>(false);
 // 点击聊天历史
 function onSelectConversation(id?: string) {
     chatStore.onSelectConversation(id);
+    chatStore.getChatHistory();
 }
 
 // 滚动到顶部
@@ -68,7 +69,7 @@ function onConfirmDeleteChatHistroy(id: string) {
 }
 
 // 打开编辑弹框
-function onOpenEditChatTitleDialog(chatInfo: Users.UsersUserIdConversationsResponseData) {
+function onOpenEditChatTitleDialog(chatInfo: Users.ConversationItem) {
     editChatInfo.id = chatInfo.id;
     editChatInfo.name = chatInfo.name;
     dialogVisible.value = true;

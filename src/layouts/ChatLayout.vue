@@ -28,6 +28,7 @@ const routes = computed(() => {
 
 onMounted(() => {
     setActiveIndex();
+    chatStore.setChatType(route.path);
     llmModelStore.getLlmModels();
 });
 

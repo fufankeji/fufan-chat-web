@@ -16,7 +16,7 @@ export interface IChatRecord {
 export type TChatRecordItem = [IChatRecord, IChatRecord];
 
 interface Props {
-    data: Conversations.ConversationsConversationsIdMessagesResponseData;
+    data: Conversations.MessageItem;
 }
 
 const userStore = useUserStore();
@@ -36,14 +36,21 @@ const props = defineProps<Props>();
         <div :class="{ 'chat-content': true, 'chat-error': !props.data.response }">
             <el-text type="info" class="time">{{ props.data.create_time }}</el-text>
             <div
+                v-show="Boolean(props.data.search)"
+                class="ai-search-content"
+                v-for="(searchItem, index) in props.data.search"
+                :key="index"
+            >
+                <MdPreview :moduleValue="searchItem" />
+            </div>
+            <!-- <div
                 v-show="Boolean(props.data.docs)"
                 class="ai-search-content"
                 v-for="(docsItem, index) in props.data.docs"
                 :key="index"
             >
                 <MdPreview :moduleValue="docsItem" />
-            </div>
-            <MdPreview moduleValue="[docs](https://baidu.com)" />
+            </div> -->
             <MdPreview :moduleValue="props.data.response" />
         </div>
     </div>

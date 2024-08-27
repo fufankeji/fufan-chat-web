@@ -1,10 +1,11 @@
 import { request } from "@/utils/service";
 import type * as Users from "./types/users";
+import type * as Conversations from "@/api/conversations/types/conversations";
 
 /** 获取指定用户的会话列表接口 */
-export function usersUserIdConversations(data: { user_id: string }) {
+export function usersUserIdConversations(data: { user_id: string; chat_type: Conversations.ChatType }) {
     return request<Users.UsersUserIdConversationsResponseData>({
-        url: `/api/users/${data.user_id}/conversations`,
+        url: `/api/users/${data.user_id}/conversations?chat_types=${data.chat_type}`,
         method: "get"
     });
 }

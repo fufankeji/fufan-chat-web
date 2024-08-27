@@ -21,7 +21,7 @@ export interface ConversationsResponseData {
     id: string;
 }
 
-export interface ConversationsConversationsIdMessagesResponseData {
+export interface MessageItem {
     id: string; // 消息ID
     conversation_id: string; // 会话ID
     chat_type: ChatType; // 会话类型
@@ -33,4 +33,8 @@ export interface ConversationsConversationsIdMessagesResponseData {
     create_time: string;
     docs?: string[];
     search?: string[];
+}
+
+export interface ConversationsConversationsIdMessagesResponseData {
+    data: MessageItem[];
 }

@@ -31,7 +31,7 @@ export function updateConversationName(data: { conversationId: string; name: str
 
 /** 获取指定会话的消息列表接口 */
 export function conversationsConversationsIdMessagesApi(conversations_id: string) {
-    return request<Conversations.ConversationsConversationsIdMessagesResponseData[]>({
+    return request<Conversations.ConversationsConversationsIdMessagesResponseData>({
         url: `/api/conversations/${conversations_id}/messages`,
         method: "get"
     });

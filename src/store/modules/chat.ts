@@ -8,6 +8,7 @@ import { ChatType } from "@/api/conversations/types/conversations";
 import type * as Conversations from "@/api/conversations/types/conversations";
 import { useLlmModelStore } from "@/store/modules/llmModel";
 import { conversationsConversationsIdMessagesApi } from "@/api/conversations";
+import { useChatHistoryStore } from "@/store/modules/chatHistory";
 
 const pathChatTypeMap: { [key: string]: ChatType } = {
     "/chat": ChatType.GENERAL_CHAT,
@@ -21,15 +22,17 @@ type TOnScrollBottom = () => void;
 export const useChatStore = defineStore("chat", () => {
     const chat_type = ref<ChatType>(ChatType.GENERAL_CHAT);
     const conversation_id = ref<string>("");
-    const chat_history = ref<Conversations.ConversationsConversationsIdMessagesResponseData[]>();
+    const chat_history = ref<Conversations.MessageItem[]>([]);
     const onScrollBottom = ref<TOnScrollBottom>();
 
-    // const userStore = useUserStore();
+    const chatHistoryStore = useChatHistoryStore();
     const llmModelStore = useLlmModelStore();
 
     // 设置对话类型
     const setChatType = (type: string) => {
         chat_type.value = pathChatTypeMap[type] || ChatType.GENERAL_CHAT;
+        chatHistoryStore.getConversations();
+        onSelectConversation();
     };
 
     // 选中会话
@@ -39,7 +42,7 @@ export const useChatStore = defineStore("chat", () => {
             chat_history.value = [];
             return;
         }
-        getChatHistory();
+        // getChatHistory();
     };
 
     // 设置滚动函数
@@ -50,12 +53,12 @@ export const useChatStore = defineStore("chat", () => {
     // 获取聊天历史
     const getChatHistory = async () => {
         const res = await conversationsConversationsIdMessagesApi(conversation_id.value);
-        chat_history.value = res;
+        chat_history.value = res.data;
     };
 
     // 新增一条聊天记录
     const pushMsg = (query: string) => {
-        const chatMsg: Conversations.ConversationsConversationsIdMessagesResponseData = {
+        const chatMsg: Conversations.MessageItem = {
             id: "", // 消息ID
             conversation_id: conversation_id.value, // 会话ID
             chat_type: chat_type.value, // 会话类型
@@ -113,6 +116,7 @@ export const useChatStore = defineStore("chat", () => {
         setChatType,
         onSelectConversation,
         setOnScrollBottom,
+        getChatHistory,
         chat_type,
         conversation_id,
         chat_history
