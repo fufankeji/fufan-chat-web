@@ -6,7 +6,6 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted } from "vue";
 import { MdPreview } from "md-editor-v3";
 // preview.css相比style.css少了编辑器那部分样式
 import "md-editor-v3/lib/preview.css";
@@ -16,10 +15,6 @@ interface Props {
     moduleValue?: string;
 }
 const props = defineProps<Props>();
-
-onMounted(() => {
-    console.log(props.moduleValue);
-});
 </script>
 
 <style scoped>

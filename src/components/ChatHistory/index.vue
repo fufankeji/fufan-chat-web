@@ -46,6 +46,7 @@ async function onCreateNewChat() {
     });
     await chatHistoryStore.getConversations();
     chatStore.onSelectConversation(res.id);
+    chatStore.getChatHistory();
     onScrollTop();
 }
 

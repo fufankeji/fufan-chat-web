@@ -34,6 +34,7 @@ async function onCreateNewChat(query?: string) {
     const chat_type = chatStore.chat_type;
     const res = await conversationsApi({ user_id: userStore.token, name, chat_type });
     chatStore.onSelectConversation(res.id);
+    !query && chatStore.getChatHistory();
     // onScrollTop();
 }
 
@@ -45,12 +46,12 @@ async function onSend(val: string) {
     }
     !chatStore.conversation_id && (await onCreateNewChat(query));
     chatHistoryStore.getConversations();
-    // 发送接受消息
-    try {
-        chatStore.chat({ query });
-    } catch (err) {
-        console.error(err);
-    }
+    chatStore.chat({ query });
+}
+
+async function clickCreateNewChat() {
+    await onCreateNewChat();
+    chatHistoryStore.getConversations();
 }
 
 onMounted(() => {
@@ -66,9 +67,7 @@ onMounted(() => {
         </div>
         <div>
             <div class="chat-input-top">
-                <el-tooltip content="即将上线">
-                    <el-button class="new-chat" disabled>新建对话</el-button>
-                </el-tooltip>
+                <el-button class="new-chat" @click="clickCreateNewChat">新建对话</el-button>
                 <GPTModelSelect />
             </div>
             <QuillEditor class="quill-editor" :value="inputValue" :onEnter="onSend" />
