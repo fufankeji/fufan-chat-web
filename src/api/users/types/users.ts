@@ -1,8 +1,12 @@
-export interface UsersUserIdConversationsResponseData {
+export interface ConversationItem {
     id: string;
     name: string;
     chat_type: string; // 会话类型
     create_time: string;
+}
+
+export interface UsersUserIdConversationsResponseData {
+    data: ConversationItem[];
 }
 
 // 注册接口入参

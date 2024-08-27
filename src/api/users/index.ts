@@ -3,7 +3,7 @@ import type * as Users from "./types/users";
 
 /** 获取指定用户的会话列表接口 */
 export function usersUserIdConversations(data: { user_id: string }) {
-    return request<Users.UsersUserIdConversationsResponseData[]>({
+    return request<Users.UsersUserIdConversationsResponseData>({
         url: `/api/users/${data.user_id}/conversations`,
         method: "get"
     });

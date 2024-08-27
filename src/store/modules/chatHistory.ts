@@ -8,7 +8,7 @@ import type * as Users from "@/api/users/types/users";
 
 export const useChatHistoryStore = defineStore("chatHistory", () => {
     const show_history = ref<boolean>(false);
-    const conversations = ref<Users.UsersUserIdConversationsResponseData[]>([]);
+    const conversations = ref<Users.ConversationItem[]>([]);
 
     const userStore = useUserStore();
     // const llmModelStore = useLlmModelStore();
@@ -19,7 +19,7 @@ export const useChatHistoryStore = defineStore("chatHistory", () => {
             user_id: userStore.token
             // chat_type: llmModelStore.model_name
         });
-        conversations.value = res;
+        conversations.value = res.data;
     };
 
     // 设置显示历史记录 & 获取会话列表
