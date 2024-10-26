@@ -68,12 +68,7 @@ function setActiveIndex() {
                     </el-tooltip>
                 </div>
                 <el-menu :collapse="collapse" :default-active="activeIndex" router class="menu">
-                    <el-menu-item
-                        v-for="route in routes"
-                        :key="route.path"
-                        :index="route.path"
-                        :disabled="route.path === '/knowledge'"
-                    >
+                    <el-menu-item v-for="route in routes" :key="route.path" :index="route.path">
                         <el-icon><component :is="(route.props as any)?.icon" /></el-icon>
                         <template #title>{{ route.name }}</template>
                     </el-menu-item>

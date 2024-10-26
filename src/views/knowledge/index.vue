@@ -1,7 +1,7 @@
 <script lang="ts" setup>
-import Knowledge from "./components/Knowledge.vue"
+import Knowledge from "./components/Knowledge.vue";
 </script>
 
 <template>
-  <component :is="Knowledge" />
+    <component :is="Knowledge" />
 </template>

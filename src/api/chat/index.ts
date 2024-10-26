@@ -35,7 +35,7 @@ export function chatApi(data: Chat.ChatRequestData, options?: Chat.ChatFetchEven
 }
 
 /** 知识库对话接口 */
-export function chatKnowledgeApi(data: Chat.ChatRequestData, options?: Chat.ChatFetchEventOptions) {
+export function chatKnowledgeApi(data: Chat.KnowledgeChatRequestData, options?: Chat.ChatFetchEventOptions) {
     const ctrl = new AbortController();
     const bodyStr = JSON.stringify(data);
     // http://192.168.110.131:8000
