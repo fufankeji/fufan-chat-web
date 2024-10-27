@@ -2,8 +2,8 @@ import { ref } from "vue";
 import store from "@/store";
 import { defineStore } from "pinia";
 // import { useUserStore } from "./user";
-import { chatApi, chatAISearchApi } from "@/api/chat";
-import { type ChatRequestData, IMessageData } from "@/api/chat/types/chat";
+import { chatApi, chatAISearchApi, chatKnowledgeApi } from "@/api/chat";
+import { type ChatRequestData, IMessageData, KnowledgeChatRequestData } from "@/api/chat/types/chat";
 import { ChatType } from "@/api/conversations/types/conversations";
 import type * as Conversations from "@/api/conversations/types/conversations";
 import { useLlmModelStore } from "@/store/modules/llmModel";
@@ -110,9 +110,23 @@ export const useChatStore = defineStore("chat", () => {
         );
     };
 
+    /** 对话 */
+    const chatKnowledge = async (params: Pick<KnowledgeChatRequestData, "query" | "knowledge_base_name">) => {
+        pushMsg(params.query);
+        chatKnowledgeApi(
+            {
+                ...params,
+                conversation_id: conversation_id.value,
+                model_name: llmModelStore.model_name
+            },
+            { onmessage: chatOnmessage }
+        );
+    };
+
     return {
         chat,
         chatAISearch,
+        chatKnowledge,
         setChatType,
         onSelectConversation,
         setOnScrollBottom,

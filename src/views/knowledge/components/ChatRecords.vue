@@ -49,7 +49,7 @@ async function onSend(val: string) {
     }
     !chatStore.conversation_id && (await onCreateNewChat(query));
     chatHistoryStore.getConversations();
-    chatStore.chat({ query });
+    chatStore.chatKnowledge({ query, knowledge_base_name: knowledge_bases_name.value });
 }
 
 async function clickCreateNewChat() {
