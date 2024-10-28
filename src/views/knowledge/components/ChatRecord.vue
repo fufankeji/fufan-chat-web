@@ -34,6 +34,14 @@ const props = defineProps<Props>();
         <el-avatar :size="24" :src="systemPhoto">{{ EChatType.SYSTEM }} </el-avatar>
         <div :class="{ 'chat-content': true, 'chat-error': !props.data.response }">
             <el-text type="info" class="time">{{ props.data.create_time }}</el-text>
+            <div
+                v-show="Boolean(props.data.docs)"
+                class="ai-docs-content"
+                v-for="(docsItem, index) in props.data.docs"
+                :key="index"
+            >
+                <MdPreview :moduleValue="docsItem" />
+            </div>
             <MdPreview :moduleValue="props.data.response" />
         </div>
     </div>
@@ -66,6 +74,10 @@ const props = defineProps<Props>();
 
         &:hover .time {
             display: block;
+        }
+
+        .ai-docs-content {
+            margin: 16px 16px 0;
         }
 
         pre {

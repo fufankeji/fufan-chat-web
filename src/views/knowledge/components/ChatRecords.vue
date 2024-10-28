@@ -8,6 +8,7 @@ import GPTModelSelect from "@/components/GPTModelSelect/index.vue";
 import { useUserStore } from "@/store/modules/user";
 import { useChatHistoryStore } from "@/store/modules/chatHistory";
 import { getKnowledgeListApi } from "@/api/knowledge";
+import { ElMessage } from "element-plus";
 
 export interface IChatRecordsRef {
     onChangeChat(id: string, name: string): void;
@@ -47,6 +48,14 @@ async function onSend(val: string) {
     if (!query) {
         return;
     }
+    if (!knowledge_bases.value.length) {
+        ElMessage.warning("请先创建知识库");
+        return;
+    }
+    if (!knowledge_bases_name.value) {
+        ElMessage.warning("请先选择知识库");
+        return;
+    }
     !chatStore.conversation_id && (await onCreateNewChat(query));
     chatHistoryStore.getConversations();
     chatStore.chatKnowledge({ query, knowledge_base_name: knowledge_bases_name.value });
@@ -59,7 +68,6 @@ async function clickCreateNewChat() {
 
 async function getKnowledgeList() {
     const res = await getKnowledgeListApi(userStore.token);
-    console.log(res);
     knowledge_bases.value = res.data.knowledge_bases;
 }
 
